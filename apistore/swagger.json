@@ -1,0 +1,86 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API dello store",
+      "description": "API per uno store.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+    "paths": {
+      "/prodotti": {
+        "get": {
+          "summary": "Recupera tutti i prodotti",
+          "responses": {
+            "200": {
+              "description": "Elenco di prodotti recuperati con successo"
+            },
+            "500": {
+              "description": "Errore interno del server"
+            }
+          }
+        }
+      },
+      "/utenti": {
+        "get": {
+          "summary": "Recupera tutti gli utenti",
+          "responses": {
+            "200": {
+              "description": "Elenco di utenti recuperati con successo"
+            },
+            "500": {
+              "description": "Errore interno del server"
+            }
+          }
+        }
+      },
+      "/impiegati/{email}/{password}": {
+        "get": {
+          "summary": "Recupera un impiegato per email e password",
+          "parameters": [
+            {
+              "name": "email",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "password",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Impiegato recuperato con successo"
+            },
+            "500": {
+              "description": "Errore interno del server"
+            }
+          }
+        }
+      },
+      "/impiegati": {
+        "get": {
+          "summary": "Recupera tutti gli impiegati",
+          "responses": {
+            "200": {
+              "description": "Elenco di impiegati recuperati con successo"
+            },
+            "500": {
+              "description": "Errore interno del server"
+            }
+          }
+        }
+      }
+    }
+  }
+  
