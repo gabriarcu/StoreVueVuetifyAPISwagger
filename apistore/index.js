@@ -2,9 +2,11 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json'); 
+const swaggerDocument = require('./swagger.json');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
 
 // Configura la connessione al database
 const db = mysql.createConnection({
@@ -26,7 +28,36 @@ db.connect((err) => {
 app.use(cors());
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+app.post('/login', (req, res) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+  console.log(email);
+  console.log(password)
+  // Query the database to retrieve hashed password for the provided username
+  db.query('SELECT * FROM employees WHERE email = ?', [email], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    const user = results[0];
+    console.log(user);
+    // Compare provided password with hashed password from the database
+    if (password !== user.pwd) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    // Generate JWT token upon successful authentication
+    const token = jwt.sign({ userId: user.employeeNumber, name: user.lastName }, process.env.JWT_KEY);
+    // const token = jwt.sign({ userId: user.employeeNumber, name: user.lastName }, "paleocapa");
+    res.json({ user, token });
+
+  });
+});
 
 // Esempio di endpoint per ottenere tutti i prodotti
 app.get('/prodotti', (req, res) => {

@@ -1,84 +1,56 @@
 <template>
-    <div>
-      <!-- <v-img class="mx-auto my-6" max-width="228"
-        src="logo.png"></v-img> -->
-  
-      <v-card class="mx-auto pa-12 pb-8 my-6" elevation="8" max-width="448" rounded="lg">
-        <div class="text-subtitle-1 text-medium-emphasis">Account</div>
-  
-        <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
-          variant="outlined" id="email"></v-text-field>
-  
-        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-          Password
-  
-          <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer" target="_blank">
-            Forgot login password?</a>
-        </div>
-  
-        <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-          density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-          @click:append-inner="visible = !visible" id="pwd"></v-text-field>
-  
-        <v-card class="mb-12" color="surface-variant" variant="tonal">
-          <v-card-text class="text-medium-emphasis text-caption">
-            Warning: After 3 consecutive failed login attempts, you account will be temporarily locked for three hours. If
-            you must login now, you can also click "Forgot login password?" below to reset the login password.
-          </v-card-text>
-        </v-card>
-  
-        <v-btn block class="mb-8" color="blue" size="large" variant="tonal" @click="Login()">
-          Log In
-        </v-btn>
-  
-        <v-card-text class="text-center">
-          <a class="text-blue text-decoration-none" href="#" rel="noopener noreferrer" target="_blank">
-            Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
-          </a>
-        </v-card-text>
-      </v-card>
-    </div>
-  </template>
-  
-  <script>
-  
-  export default {
-    name: 'LoginView',
-    data() {
-      return {
-        utente: [],
-        visible: false,
-      }
+  <div>
+    <h1>LOGIN</h1>
+    <form @submit="login">
+      <input id="email" placeholder="email" />
+      <br />
+      <br />
+      <input id="password" placeholder="password" type="password" />
+      <br />
+      <br />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</template>
+
+<script>
+import { mapMutations } from "vuex";
+export default {
+  name: 'LoginView',
+  data: () => {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    ...mapMutations(["setUser", "setToken"]),
+    async login(e) {
+      e.preventDefault();
+      const salt = 'paleocapa';
+      const mail = document.getElementById('email').value;
+      let pwd = document.getElementById('password').value;
+      const hashedPwd = this.$CryptoJS.SHA256(pwd + salt).toString();
+      console.log(hashedPwd);
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          email: mail,
+          password: hashedPwd
+        }),
+      });
+      const { user, token } = await response.json();
+      this.setUser(user);
+      this.setToken(token);
+      this.$router.push("/about");
+      // localStorage.setItem("user", JSON.stringify (user));
+      // localStorage.setItem("token", token);
     },
-    methods: {
-      Login() {
-        const salt = 'paleocapa';
-        let email = document.getElementById('email').value;
-        let pwd = document.getElementById('pwd').value;
-        const hashedPwd = this.$CryptoJS.SHA256(pwd + salt).toString();
-        console.log(pwd);
-        console.log(hashedPwd);
-  
-  
-  
-  
-        // dmurphy@classicmodelcars.com
-        // 627875803c550ed188130bada97e51aa11db572877cd9adc8c1aeced41b617c7
-  
-        fetch('http://localhost:3000/impiegati/' + email + '/' + hashedPwd)
-          .then(response => response.json())
-          .then(data => {
-            this.utente = data;
-            console.log(this.utente);
-          })
-  
-  
-      },
-  
-    },
-    mounted() {
-  
-    }
-  }
-  </script>
-  
+
+  },
+};
+</script>

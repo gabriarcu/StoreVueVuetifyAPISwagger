@@ -12,7 +12,8 @@
     "vue": "^3.2.13",
     "vue-cryptojs": "^2.4.5",
     "vue-router": "^4.0.3",
-    "vuetify": "^3.4.10"
+    "vuetify": "^3.4.10",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
