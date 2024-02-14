@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
+const verifyToken = require('./middleware/authMiddleware');
 
 // Configura la connessione al database
 const db = mysql.createConnection({
@@ -75,10 +76,12 @@ app.get('/prodotti', (req, res) => {
 app.get('/utenti', (req, res) => {
   
   const getProductsQuery = 'SELECT * FROM customers';
-  db.query(getProductsQuery, (err, results) => {
+  db.query(getProductsQuery,verifyToken, (err, results) => {
     if (err) {
       console.error('Errore durante la query:', err);
       res.status(500).send('Errore interno del server');
+      res.status(200).json({ message: 'Protected route accessed' });
+
     } else {
       res.json(results);
     }

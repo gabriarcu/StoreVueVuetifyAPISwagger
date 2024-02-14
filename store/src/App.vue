@@ -2,7 +2,7 @@
   <v-toolbar dark prominent>
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-    <v-toolbar-title>Vuetify</v-toolbar-title>
+    <v-toolbar-title>Store</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
