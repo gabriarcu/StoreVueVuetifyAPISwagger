@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import store from '../store' // Assicurati di importare il tuo store Vuex
+import store from '../store' 
 
 const routes = [
   {
@@ -12,7 +12,7 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
-    meta: { requiresAuth: true } // Aggiungi un meta campo per indicare che questa rotta richiede autenticazione
+    meta: { requiresAuth: true } // per indicare che questa rotta richiede autenticazione
   },
   {
     path: '/login',
